@@ -1,39 +1,32 @@
-import SimpleLightbox from 'simplelightbox';
+import { formElements } from './form-elements';
+import { requests } from './pixabay-api';
 
-const form = document.querySelector('.form');
-const gallery = document.querySelector('.gallery');
-const userInput = document.querySelector('input');
-const div = document.querySelector('.div');
+export function markupForOne(hits) {
+  const {
+    largeImageURL,
+    webformatURL,
+    tags,
+    likes,
+    views,
+    comments,
+    downloads,
+  } = hits;
 
-export const formEl = {
-  form,
-  gallery,
-  userInput,
-  div,
-};
-
-export const showLoader = () => {
-  const loader = document.createElement('span');
-  loader.classList.add('loader');
-  formEl.div.append(loader);
-};
-
-export const hideLoader = () => {
-  const loader = document.querySelector('.loader');
-  if (loader) {
-    loader.remove();
-  }
-};
-
-export function lightbox() {
-  const lightbox = new SimpleLightbox('.gallery a', options);
-  lightbox.refresh();
+  return `<li class="gallery-item"><a href="${largeImageURL}">
+            <img class="gallery-image" src="${webformatURL}" alt="${tags}"></a>
+            <p><b>Likes: </b>${likes}</p>
+            <p><b>Views: </b>${views}</p>
+            <p><b>Comments: </b>${comments}</p>
+            <p><b>Downloads: </b>${downloads}</p>
+            </li>`;
 }
-const options = {
-  captions: true,
-  captionSelector: 'img',
-  captionType: 'attr',
-  captionsData: 'alt',
-  captionPosition: 'bottom',
-  captionDelay: 250,
-};
+
+function markupFoAll(hits) {
+  return hits.map(markupForOne).join('');
+}
+
+export function renderMarkup(hits) {
+  const markup = markupFoAll(hits);
+  formElements.gallery.insertAdjacentHTML('afterbegin', markup);
+  console.log(markup);
+}

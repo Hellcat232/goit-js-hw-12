@@ -1,12 +1,21 @@
-import 'izitoast/dist/css/iziToast.min.css';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-import { showLoader } from './js/render-functions';
-import { fetchApi } from './js/pixabay-api';
-import { formEl } from './js/render-functions';
+import { formElements } from './js/form-elements';
+import { requests } from './js/pixabay-api';
+import { markupForOne } from './js/render-functions';
+formElements.form.addEventListener('submit', hendlerSubmitForm);
 
-formEl.form.addEventListener('submit', event => {
+let usersRequests;
+let page;
+
+async function hendlerSubmitForm(event) {
   event.preventDefault();
-  formEl.gallery.innerHTML = '';
-  showLoader();
-  fetchApi();
-});
+  //   formElements.gallery.innerHTML = '';
+  usersRequests = event.target.elements.input.value.trim();
+  page = 1;
+  //   const data = await requests(usersRequests);
+  //   renderMarkup(data.hits);
+
+  const res = await requests(usersRequests);
+  markupForOne(res.hits);
+
+  event.target.reset();
+}
