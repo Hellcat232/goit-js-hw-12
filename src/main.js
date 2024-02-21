@@ -11,7 +11,7 @@ const loadMoreBtn = document.querySelector('.btn-load');
 
 let page = 1;
 let per_page = 15;
-
+let userQuery;
 const showLoader = () => {
   const loader = document.createElement('span');
   loader.classList.add('loader');
@@ -51,7 +51,7 @@ fetchPicturesForm.addEventListener('submit', async e => {
   page = 1;
   e.preventDefault();
   gallery.innerHTML = '';
-  const userQuery = userInput.value;
+  userQuery = userInput.value;
 
   try {
     const photos = await fetchPhotos(userQuery, page, per_page);
@@ -93,7 +93,7 @@ loadMoreBtn.addEventListener('click', async () => {
   showLoader();
   try {
     page += 1;
-    const photos = await fetchPhotos();
+    const photos = await fetchPhotos(userQuery, page, per_page);
     renderPhotos(photos, gallery);
     hideLoader();
 
