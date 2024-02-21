@@ -1,32 +1,20 @@
-import { formElements } from './form-elements';
-import { requests } from './pixabay-api';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-export function markupForOne(hits) {
-  const {
-    largeImageURL,
-    webformatURL,
-    tags,
-    likes,
-    views,
-    comments,
-    downloads,
-  } = hits;
-
-  return `<li class="gallery-item"><a href="${largeImageURL}">
-            <img class="gallery-image" src="${webformatURL}" alt="${tags}"></a>
-            <p><b>Likes: </b>${likes}</p>
-            <p><b>Views: </b>${views}</p>
-            <p><b>Comments: </b>${comments}</p>
-            <p><b>Downloads: </b>${downloads}</p>
+export function renderPhotos(data, gallery, options) {
+  const markup = data.hits
+    .map(data => {
+      return `<li class="gallery-item"><a href="${data.largeImageURL}">
+            <img class="gallery-image" src="${data.webformatURL}" alt="${data.tags}"></a>
+            <p><b>Likes: </b>${data.likes}</p>
+            <p><b>Views: </b>${data.views}</p>
+            <p><b>Comments: </b>${data.comments}</p>
+            <p><b>Downloads: </b>${data.downloads}</p>
             </li>`;
-}
+    })
+    .join('');
 
-function markupFoAll(hits) {
-  return hits.map(markupForOne).join('');
-}
+  gallery.insertAdjacentHTML('beforeend', markup);
 
-export function renderMarkup(hits) {
-  const markup = markupFoAll(hits);
-  formElements.gallery.insertAdjacentHTML('afterbegin', markup);
-  console.log(markup);
+  new SimpleLightbox('.gallery a', options);
 }
